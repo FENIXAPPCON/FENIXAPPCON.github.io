@@ -1,0 +1,368 @@
+<html><head><base href="." /><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fénix - Sistema de Gestión</title>
+<style>
+:root {
+  --primary: #FF4B2B;
+  --secondary: #FF416C;
+  --dark: #1a1a1a;
+  --light: #f5f5f5;
+  --text: #ffffff;
+  --card-bg: rgba(255,255,255,0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: var(--dark);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: linear-gradient(var(--primary), var(--secondary));
+  padding: 2rem;
+  position: fixed;
+  height: 100vh;
+  width: 250px;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+  z-index: 100;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-item {
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateX(5px);
+}
+
+.nav-item.active {
+  background: rgba(255,255,255,0.15);
+}
+
+.main-content {
+  padding: 2rem;
+  margin-left: 250px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+.summary-card h3 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.card {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chart-container {
+  height: 300px;
+  margin-top: 1rem;
+}
+
+.theme-switcher {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  background: var(--card-bg);
+  padding: 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.color-option {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+}
+
+.color-option.active {
+  border-color: white;
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+  
+  .menu-toggle {
+    display: block;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1000;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Fénix
+    </div>
+    <nav>
+      <div class="nav-item active">📊 Dashboard</div>
+      <div class="nav-item">📅 Calendario</div>
+      <div class="nav-item">👥 Clientes</div>
+      <div class="nav-item">💰 Facturación</div>
+      <div class="nav-item">📈 Reportes</div>
+      <div class="nav-item">⚙️ Configuración</div>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <div class="summary-cards">
+      <div class="summary-card fade-in">
+        <h3>12</h3>
+        <p>Citas Hoy</p>
+      </div>
+      <div class="summary-card fade-in">
+        <h3>45</h3>
+        <p>Clientes Activos</p>
+      </div>
+      <div class="summary-card fade-in">
+        <h3>$15k</h3>
+        <p>Ingresos del Mes</p>
+      </div>
+    </div>
+
+    <div class="dashboard">
+      <div class="card fade-in">
+        <div class="card-header">
+          <span>Próximas Citas</span>
+          <span style="color: var(--primary)">Ver todas</span>
+        </div>
+        <div id="appointments-list"></div>
+      </div>
+      
+      <div class="card fade-in">
+        <div class="card-header">Ingresos vs Gastos</div>
+        <div class="chart-container">
+          <canvas id="incomeChart"></canvas>
+        </div>
+      </div>
+      
+      <div class="card fade-in">
+        <div class="card-header">Distribución de Clientes</div>
+        <div class="chart-container">
+          <canvas id="clientsChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const incomeData = {
+    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+    datasets: [{
+        label: 'Ingresos',
+        data: [12000, 19000, 15000, 25000, 22000, 30000],
+        borderColor: '#FF4B2B',
+        backgroundColor: 'rgba(255, 75, 43, 0.1)',
+        fill: true
+    },
+    {
+        label: 'Gastos',
+        data: [8000, 12000, 11000, 14000, 15000, 17000],
+        borderColor: '#FF416C',
+        backgroundColor: 'rgba(255, 65, 108, 0.1)',
+        fill: true
+    }]
+};
+
+const clientsData = {
+    labels: ['Normales', 'Patrocinados', 'Profesionales'],
+    datasets: [{
+        data: [30, 15, 55],
+        backgroundColor: ['#FF4B2B', '#FF416C', '#FF8C00']
+    }]
+};
+
+const incomeChart = new Chart(
+    document.getElementById('incomeChart'),
+    {
+        type: 'line',
+        data: incomeData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        color: '#ffffff'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#ffffff'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#ffffff'
+                    }
+                }
+            }
+        }
+    }
+);
+
+const clientsChart = new Chart(
+    document.getElementById('clientsChart'),
+    {
+        type: 'doughnut',
+        data: clientsData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#ffffff'
+                    }
+                }
+            }
+        }
+    }
+);
+
+const appointments = [
+    { time: '09:00', client: 'Juan Pérez', service: 'Consultoría', status: 'Confirmado' },
+    { time: '11:30', client: 'María García', service: 'Asesoría', status: 'Pendiente' },
+    { time: '15:00', client: 'Carlos López', service: 'Revisión', status: 'Confirmado' }
+];
+
+const appointmentsList = document.getElementById('appointments-list');
+appointments.forEach(apt => {
+    const aptElement = document.createElement('div');
+    aptElement.style.padding = '0.8rem 0';
+    aptElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+    aptElement.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="font-weight: bold;">${apt.time}</div>
+                <div style="color: rgba(255,255,255,0.7)">${apt.client}</div>
+            </div>
+            <div>
+                <div style="color: var(--primary)">${apt.service}</div>
+                <div style="font-size: 0.8rem; color: ${apt.status === 'Confirmado' ? '#4CAF50' : '#FFC107'}">${apt.status}</div>
+            </div>
+        </div>
+    `;
+    appointmentsList.appendChild(aptElement);
+});
+</script>
+</body></html>
